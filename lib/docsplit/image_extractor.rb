@@ -41,7 +41,7 @@ module Docsplit
       else
         page_list(pages).each do |page|
           out_file  = File.join(directory, "#{basename}_#{page}.#{format}")
-          cmd = "MAGICK_TMPDIR=#{tempdir} OMP_NUM_THREADS=2 gm convert +adjoin #{common} \"#{pdf}[#{page - 1}]\" \"#{out_file}\" 2>&1".chomp
+          cmd = "MAGICK_TMPDIR=#{tempdir} OMP_NUM_THREADS=2 gm convert +adjoin #{common} \"#{pdf.shellescape}[#{page - 1}]\" \"#{out_file.shellescape}\" 2>&1".chomp
           result = `#{cmd}`.chomp
           raise ExtractionFailed, result if $? != 0
         end

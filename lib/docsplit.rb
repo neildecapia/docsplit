@@ -57,7 +57,7 @@ module Docsplit
     [docs].flatten.each do |doc|
       basename = File.basename(doc, File.extname(doc))
       options = "-jar #{ROOT}/vendor/jodconverter/jodconverter-core-3.0-beta-3.jar -r #{ROOT}/vendor/conf/document-formats.js"
-      run "#{options} \"#{doc}\" \"#{opts[:output] || '.'}/#{basename}.pdf\"", [], {}
+      run "#{options} \"#{doc.shellescape}\" \"#{opts[:output] || '.'}/#{basename.shellescape}.pdf\"", [], {}
     end
   end
 
@@ -83,7 +83,7 @@ module Docsplit
   # Runs a Java command, with quieted logging, and the classpath set properly.
   def self.run(command, pdfs, opts, return_output=false)
     pdfs    = [pdfs].flatten.map{|pdf| "\"#{pdf}\""}.join(' ')
-    cmd     = "java #{HEADLESS} #{LOGGING} #{OFFICE} -cp #{CLASSPATH} #{command} #{pdfs} 2>&1"
+    cmd     = "java #{HEADLESS} #{LOGGING} #{OFFICE} -cp #{CLASSPATH} #{command} #{pdfs.shellescape} 2>&1"
     result  = `#{cmd}`.chomp
     raise ExtractionFailed, result if $? != 0
     return return_output ? (result.empty? ? nil : result) : true
